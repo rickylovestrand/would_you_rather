@@ -1,37 +1,60 @@
 <template>
   <div id="app">
 
-    <h1>Would you rather...</h1>
+    <h1>Would You Rather?</h1>
 
-    <would-you-rather v-bind:question="wyrQuestion"
-    v-bind:answer1="wyrAnswer1"
-    v-bind:answer2="wyrAnswer2"
-    v-on:answer-changed="answerChanged"></would-you-rather>
+    <would-you-rather-question v-for="question in questions"
+    v-bind:question="question"
+    v-bind:key="question.id"
+    v-on:answer-changed="answerChanged"></would-you-rather-question>
 
-    <p>{{ userSelectionMessage }}</p>
+    <h1>You Would Rather..</h1>
+    <p v-if="answers.length===0">...? Try making a selection above</p>
+    <ul>
+      <li v-for="answer in answers">{{ answer }}</li>
+    </ul>
     
   </div>
 </template>
 
 <script>
-import WouldYouRather from './components/WouldYouRather.vue'
+import WouldYouRatherQuestion from './components/WouldYouRatherQuestion.vue'
 
 export default {
   name: 'App',
   components: {
-    WouldYouRather
+    WouldYouRatherQuestion
   }, 
   data (){
     return {
-      wyrQuestion: 'Would you rather have all traffic lights you approach be green or never have to stand in line again?',
-      wyrAnswer1: 'Green traffic lights', 
-      wyrAnswer2: 'No lines', 
-      userSelectionMessage: ''
+      questions: [
+        {
+          id: 0,
+          question: 'Would you rather have all traffic lights you approach be green or never have to stand in line again?',
+          answer1: 'Have all traffic lights I approach be green', 
+          answer2: 'Never have to stand in line again',      
+        }, 
+        {
+          id: 1,
+          question: 'Would you rather be a famous inventor or a famous writer?',
+          answer1: 'Be a famous inventor', 
+          answer2: 'Be a famous writer',
+        }, 
+        {
+          id: 2,
+          question: 'Would you rather be incredibly funny or incredibly smart?',
+          answer1: 'Be incredibly funny', 
+          answer2: 'Be incredibly smart',
+        }
+      ], 
+      answers: []
     }
   }, 
   methods: {
-    answerChanged(choice){
-      this.userSelectionMessage = `Thanks! You chose ${choice}`
+    // child component will pass back what answer was choses and the id of the question
+    // question id used to arrange answers in the same order as the questions
+    answerChanged(choice, id){
+      this.answers[id] = `${choice}`
     }
   }
 }
@@ -50,6 +73,15 @@ body {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
-  background: lightslategray
+  background: lightyellow
+}
+
+li {
+  list-style-type: none;
+  font-size: large;
+}
+
+h1 {
+  font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
 }
 </style>
